@@ -29,6 +29,8 @@ void Reading_Xsd::open_file()
 		{
 			getline(f1, run_from_file);
 			searching_specific(run_from_file);
+
+			// dont forget to change flag when  </xsd:sequence>
 		}
 	}
 
@@ -61,6 +63,30 @@ void Reading_Xsd::found_Complex(string Complex_line)
 	}
 }
 
+void Reading_Xsd::found_Sequence_or_All(string Stucture_line) // can be adapted to all
+{
+	if(Complex.Complex_Type == "sequence")
+	{
+		isInsideSeq = true;
+	}
+	else
+	{ }
+}
+
+void Reading_Xsd::found_Element(string Element_line)
+{
+	if (isInsideSeq)
+	{
+		Elements.push_back(Element_of_sequece()).
+		search_keywords_element(Element_line, name_search);
+		search_keywords_element(Element_line, type_search);
+	}
+	else
+	{
+		
+	}
+}
+
 int Reading_Xsd::define_values(string Keywords)
 {
 	if (Keywords == "<xsd:schema")
@@ -72,6 +98,10 @@ int Reading_Xsd::define_values(string Keywords)
 	if (Keywords == "<xsd:element")
 		return 3;
 	if (Keywords == "<xsd:wrapper")
-		return 3;
+		return 4;
+	if (Keywords == "<xsd:all")
+		return 5;
+	if (Keywords == "</xsd:sequence>")
+		return 6;
 }
 
