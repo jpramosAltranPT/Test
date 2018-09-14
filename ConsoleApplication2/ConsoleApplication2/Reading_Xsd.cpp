@@ -24,10 +24,10 @@ void Reading_Xsd::open_file()
 	if (f1.is_open())
 	{
 		run_from_file = "";
-		getline(f1, run_from_file);
 		//Parser
 		while (!f1.eof() || run_from_file.length() != 0)
 		{
+			getline(f1, run_from_file);
 			searching_specific(run_from_file);
 		}
 	}
@@ -36,7 +36,6 @@ void Reading_Xsd::open_file()
 
 void Reading_Xsd::searching_specific(string search)
 {
-	
 }
 
 void Reading_Xsd::found_scheme(string Scheme_Line)
@@ -48,6 +47,20 @@ void Reading_Xsd::found_scheme(string Scheme_Line)
 	} while (begin_of_K_schema != string::npos);
 }
 
+void Reading_Xsd::found_Complex(string Complex_line)
+{
+	start_of_Name_Complex = Complex_line.find(name_search);
+	if (start_of_Name_Complex != string::npos)
+	{
+		end_of_Name_Complex= Complex_line.find(">");
+		if (end_of_Name_Complex != string::npos) 
+		{
+			Complex.Complex_Name = Complex_line.substr(start_of_Name_Complex + 6,
+										end_of_Name_Complex - start_of_Name_Complex - 7);
+		}
+	}
+}
+
 int Reading_Xsd::define_values(string Keywords)
 {
 	if (Keywords == "<xsd:schema")
@@ -57,6 +70,8 @@ int Reading_Xsd::define_values(string Keywords)
 	if (Keywords == "<xsd:sequence")
 		return 2;
 	if (Keywords == "<xsd:element")
+		return 3;
+	if (Keywords == "<xsd:wrapper")
 		return 3;
 }
 
